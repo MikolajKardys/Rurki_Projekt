@@ -1,5 +1,6 @@
 package main;
-import java.util.Arrays;
+import org.knowm.xchart.*;
+
 import java.util.List;
 
 public class World {
@@ -28,7 +29,7 @@ public class World {
     }
 
     public static void main (String [] args){
-        int N = 1;
+        int N = 1000;
         List<NthLine> eList = NthLine.getLines(0, 2, N);
 
         double [][] A = new double[N+1][N+1];
@@ -50,13 +51,19 @@ public class World {
         Matrix res = matA.solve(matB);
 
         EndFunc f = new EndFunc(res, eList);
-        for (double i = 0.00; i < 2.0; i = i + 0.01){
-            String ans = Double.toString(f.getEndVal(i));
-            ans = ans.replace(".", ",");
-            System.out.println(ans);
+        double [] xData = new double [201];
+        double [] yData = new double [201];
+        int ind = 0;
+        for (double i = 0.00; i < 2.0; i += 0.01, ind++){
+            xData[ind] = i;
+            yData[ind] = f.getEndVal(i);
         }
-        String ans = Double.toString(f.getEndVal(2.0));
-        ans = ans.replace(".", ",");
-        System.out.println(ans);
+        xData[200] = 2.0;
+        yData[200] = f.getEndVal(2.0);
+
+        XYChart results = new XYChartBuilder().width(600).height(500).title("Results").xAxisTitle("X").yAxisTitle("Y").build();
+        results.getStyler().setMarkerSize(2);
+        XYSeries approx = results.addSeries("Approximation", xData, yData);
+        new SwingWrapper(results).displayChart();
     }
 }
