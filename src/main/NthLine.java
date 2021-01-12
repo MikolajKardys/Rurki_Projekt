@@ -87,7 +87,7 @@ public class NthLine {
         return new Interval(0, 0);
     }
     public Interval getNonZeroRight (){
-        if (leftLine != null) {
+        if (rightLine != null) {
             return new Interval(mid, nonZero.b);
         }
         return new Interval(0, 0);

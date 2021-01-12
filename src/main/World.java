@@ -1,23 +1,19 @@
 package main;
+import java.util.Arrays;
 import java.util.List;
 
 public class World {
     private static double B(NthLine u, NthLine v, int same) {
         double result = 0;
 
-        result -= u.getValAt(2) * v.getValAt(2);
+        result -= u.getValAt(0) * v.getValAt(0);
 
         if (same != 0){
             result += Integral.getIntegralOn(x -> u.getDerivative().getValAt(x)*v.getDerivative().getValAt(x), u.nonZeroWith(v));
-            result -= Integral.getIntegralOn(x -> u.getValAt(x)*v.getValAt(x), u.nonZeroWith(v));
         }
         else {
             result += Integral.getIntegralOn(x -> u.getDerivative().getValAt(x)*v.getDerivative().getValAt(x), u.getNonZeroRight());
             result += Integral.getIntegralOn(x -> u.getDerivative().getValAt(x)*v.getDerivative().getValAt(x), u.getNonZeroLeft());
-
-            result -= Integral.getIntegralOn(x -> u.getValAt(x)*v.getValAt(x), u.getNonZeroRight());
-            result -= Integral.getIntegralOn(x -> u.getValAt(x)*v.getValAt(x), u.getNonZeroLeft());
-
         }
 
         return result;
@@ -26,29 +22,28 @@ public class World {
     private static double L(NthLine v) {
         double result = 0;
 
-        result += Integral.getIntegralOn(x -> v.getValAt(x) * Math.sin(x), v.getNonZeroLeft());
-        result += Integral.getIntegralOn(x -> v.getValAt(x) * Math.sin(x), v.getNonZeroRight());
+        result -= 20 * v.getValAt(0);
 
         return result;
     }
 
     public static void main (String [] args){
-        int N = 1000;
+        int N = 1;
         List<NthLine> eList = NthLine.getLines(0, 2, N);
 
         double [][] A = new double[N+1][N+1];
-        for (int i = 1; i < eList.size(); i++){
-            for (int j = 1; j < eList.size(); j++) {
+        for (int i = 0; i < eList.size() - 1; i++){
+            for (int j = 0; j < eList.size(); j++) {
                 A[i][j] = B(eList.get(i), eList.get(j), i-j);
             }
         }
-        A[0][0] = 1;
+        A[N][N] = 1;
 
         double [][] B = new double[N+1][1];
-        for (int i = 1; i < eList.size(); i++){
+        for (int i = 0; i < eList.size() - 1; i++){
             B[i][0] = L(eList.get(i));
         }
-        B[0][0] = 0;
+        B[N][0] = 0;
 
         Matrix matA = new Matrix(A);
         Matrix matB = new Matrix(B);
