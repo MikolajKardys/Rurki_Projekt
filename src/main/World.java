@@ -57,7 +57,7 @@ public class World {
         List<NthLine> eList = NthLine.getLines(0, 2, N);
         double [][] A = new double[N+1][N+1];
         for (int i = 1; i < eList.size(); i++){
-            for (int j = 1; j < eList.size(); j++) {
+            for (int j = 0; j < eList.size(); j++) {
                 A[i][j] = B(eList.get(i), eList.get(j), i-j);
             }
         }
@@ -73,7 +73,7 @@ public class World {
         Matrix matB = new Matrix(B);
         Matrix res = matA.solve(matB);
 
-
+        ShowResults.show(matA, matB, res, N+1);
 
         EndFunc f = new EndFunc(res, eList);
         double [] xData = new double [201];
